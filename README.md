@@ -22,11 +22,15 @@ El objetivo principal del proyecto es ayudar a las personas a que tomen decision
 
 •	Exportar reportes a Excel para manejo de los datos
 
+
 ## Restricciones
 
 •	El sistema debe tener una base de datos en la nube, para facilitar el despliegue de la aplicación.
 
 •	El sistema debe tener separado el front-end y el back-end, para tener las responsabilidades separadas y facilitar los cambios en el futuro.  
+
+## Diagrama de casos de uso
+
 
 
 
