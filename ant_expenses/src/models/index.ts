@@ -4,3 +4,4 @@ export * from './tipos-operaciones.model';
 export * from './transacciones.model';
 export * from './cuentas.model';
 export * from './tipos-cuentas.model';
+export * from './usuario.model';

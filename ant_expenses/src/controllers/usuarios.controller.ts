@@ -1,5 +1,6 @@
 import { service } from '@loopback/core';
 import {
+  constrainFilter,
   Count,
   CountSchema,
   Filter,
@@ -17,8 +18,9 @@ import {
   del,
   requestBody,
   response,
+  HttpErrors,
 } from '@loopback/rest';
-import {Usuarios} from '../models';
+import {Usuario, Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
 import { AutenticacionService } from '../services';
 
@@ -27,8 +29,45 @@ export class UsuariosController {
     @repository(UsuariosRepository)
     public usuariosRepository : UsuariosRepository,
     @service(AutenticacionService)
-    public autenticacionService : AutenticacionService 
+    public autenticacionService : AutenticacionService, 
+    
   ) {}
+
+/*se crea post para usuario*/
+  @post('/login')
+  @response(200, {
+    description: 'Usuario logeado con exito',
+  })
+  async login(
+    @requestBody() usuario : Usuario
+    /*valida si el usuario esta en la tabla usuarios*/
+  ) {
+        
+    /*para probar que nos imprima el encriptado y comparar */ //console.log(usuario.clave)
+    let persona =await this.autenticacionService.loginAsync(usuario.email, usuario.clave)
+    //let persona =await this.autenticacionService.login(usuario.email, usuario.clave)
+    //console.log(usuario.clave)
+    if (persona){
+
+      return {
+        datos : persona,
+        state : 'ok'
+      }
+
+
+    }else{
+      //console.log(usuario.clave)
+      throw new HttpErrors[401]("Datos incorrectos");
+      
+
+    }
+
+   
+  }
+  
+
+
+
 
   @post('/usuarios')
   @response(200, {
@@ -46,6 +85,7 @@ export class UsuariosController {
         },
       },
     })
+    /*encriptar la clave*/
     usuarios: Omit<Usuarios, 'id'>,
   ): Promise<Usuarios> {
 
