@@ -1,4 +1,6 @@
+import { authenticate } from '@loopback/authentication';
 import { service } from '@loopback/core';
+
 import {
   constrainFilter,
   Count,
@@ -24,6 +26,7 @@ import {Usuario, Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
 import { AutenticacionService } from '../services';
 
+@authenticate('admin')
 export class UsuariosController {
   constructor(
     @repository(UsuariosRepository)
@@ -48,12 +51,15 @@ export class UsuariosController {
     //let persona =await this.autenticacionService.login(usuario.email, usuario.clave)
     //console.log(usuario.clave)
     if (persona){
+      let token = this.autenticacionService.generaciontoken(persona);
 
       return {
         datos : persona,
-        state : 'ok'
+        state : 'ok',
+        token: token
       }
-
+      
+      
 
     }else{
       //console.log(usuario.clave)
@@ -68,7 +74,7 @@ export class UsuariosController {
 
 
 
-
+ 
   @post('/usuarios')
   @response(200, {
     description: 'Usuarios model instance',

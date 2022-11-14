@@ -6,7 +6,8 @@ import CryptoJS from 'crypto-js';
 import { UsuariosRepository } from '../repositories';
 import { repository } from '@loopback/repository';
 import { Usuario, Usuarios } from '../models';
-
+import { environment } from '../config/environment';
+import jwt from 'jsonwebtoken';
 
 @injectable({scope: BindingScope.TRANSIENT})
 export class AutenticacionService {
@@ -19,7 +20,7 @@ export class AutenticacionService {
   /*
    * Add service methods here
    */
-  secretkeyAES = 'E7)AwV<PK$[4';
+  
 
   generarPassword (){
     let password = generadorPassword(12, false)
@@ -27,12 +28,12 @@ export class AutenticacionService {
   }
 //opcion para encriptar la clave
   encriptar(clave : string){
-    let encriptado = CryptoJS.AES.encrypt( clave, this.secretkeyAES).toString();
+    let encriptado = CryptoJS.AES.encrypt( clave, environment.secretkeyAES).toString();
     return encriptado;
   }
   //opcion para desencriptar la clave
   desencriptar(clave : string){
-    let bytes  = CryptoJS.AES.decrypt( clave, this.secretkeyAES);
+    let bytes  = CryptoJS.AES.decrypt( clave, environment.secretkeyAES);
     let desencriptado = bytes.toString(CryptoJS.enc.Utf8);
     return desencriptado;
    }
@@ -109,6 +110,26 @@ export class AutenticacionService {
 
     )
 
+  }
+  generaciontoken(persona :Usuarios){
+    let token = jwt.sign( {
+      data:{id : persona.id,
+        nombre : persona.nombre,
+        apellido : persona.apellido,
+        correo : persona.email        
+      }
+      
+    },environment.secretJWT,
+    { expiresIn : 60 * 60 });
+    return token;
+  }
+  ValidarTokenJWT(token: string){
+    try {
+      let data = jwt.verify(token, environment.secretJWT);
+      return data;
+    } catch (error) {
+      return false;
+    }
   }
 
 }
