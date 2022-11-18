@@ -120,16 +120,43 @@ export class AutenticacionService {
       }
       
     },environment.secretJWT,
-    { expiresIn : 60 * 60 });
+    { expiresIn : 60 });
     return token;
   }
   ValidarTokenJWT(token: string){
     try {
-      let data = jwt.verify(token, environment.secretJWT);
-      return data;
+      let datos = jwt.verify(token, environment.secretJWT);
+      return datos;
     } catch (error) {
       return false;
     }
   }
+
+  //proceso de envio de alertas SMS por logue
+  /*
+    - Nombre: notificacion_SMS_logueo
+    - Parametros:
+    *
+    *
+    *
+    *
+  */
+    notificacion_SMS_logueo(message: string){
+      const accountSid = 'AC14cf5048c86b17c736ea062fd054f0eb'; // Your Account SID from www.twilio.com/console
+      const authToken = '97908db5594b57f7caba21d72b9f7634'; // Your Auth Token from www.twilio.com/console
+
+      const twilio = require('twilio');
+      const client = new twilio(accountSid, authToken);
+
+      client.messages
+        .create({
+          body: message,
+          to: '+573016134693', // Text this number
+          from: '+18148592304', // From a valid Twilio number
+  })
+  .then((message : any) => console.log(message.sid));
+
+    }
+
 
 }

@@ -26,7 +26,7 @@ import {Usuario, Usuarios} from '../models';
 import {UsuariosRepository} from '../repositories';
 import { AutenticacionService } from '../services';
 
-@authenticate('admin')
+
 export class UsuariosController {
   constructor(
     @repository(UsuariosRepository)
@@ -35,7 +35,7 @@ export class UsuariosController {
     public autenticacionService : AutenticacionService, 
     
   ) {}
-
+  
 /*se crea post para usuario*/
   @post('/login')
   @response(200, {
@@ -52,7 +52,7 @@ export class UsuariosController {
     //console.log(usuario.clave)
     if (persona){
       let token = this.autenticacionService.generaciontoken(persona);
-
+      this.autenticacionService.notificacion_SMS_logueo("Inicio confirmado bienvenido  a Ant_Expenses")
       return {
         datos : persona,
         state : 'ok',
@@ -74,7 +74,7 @@ export class UsuariosController {
 
 
 
- 
+  //@authenticate('admin')
   @post('/usuarios')
   @response(200, {
     description: 'Usuarios model instance',

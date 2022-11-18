@@ -21,13 +21,9 @@ export class StrategyAdministrador implements AuthenticationStrategy{
             let datos = this.autenticacionService.ValidarTokenJWT(token);
             console.log(datos)
             if(datos){
-                //let data = JSON.parse(datos);
-                console.log(datos)
-                //let descriptado = this.authenticacionService.desencriptarObjeto( datos.toString() );
-                //console.log(descriptado);
-                
+                              
                 let perfil : UserProfile = Object.assign({
-                    datos : datos
+                    data :datos
                 });
 
                 return perfil;
